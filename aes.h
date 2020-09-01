@@ -19,15 +19,15 @@
 #include <stddef.h>
 #include "nativecrypto.h"
 
-int AES_encrypt(char * output_p, size_t * output_len,
-                int cypher,
-                char const * key_p, size_t key_len,
-                char const * iv_p, size_t iv_len,
-                char const * input_p, size_t input_len);
+int NATIVECRYPTO_NAME(AES_encrypt)(char * output_p, size_t * output_len,
+                                   int cypher,
+                                   char const * key_p, size_t key_len,
+                                   char const * iv_p, size_t iv_len,
+                                   char const * input_p, size_t input_len);
 
-int AES_decrypt(char * output_p, size_t * output_len,
-                int cypher,
-                char const * key_p, size_t key_len,
-                char const * iv_p, size_t iv_len,
-                char const * input_p, size_t input_len);
+int NATIVECRYPTO_NAME(AES_decrypt)(char * output_p, size_t * output_len,
+                                   int cypher,
+                                   char const * key_p, size_t key_len,
+                                   char const * iv_p, size_t iv_len,
+                                   char const * input_p, size_t input_len);
 #endif /* AES_H */

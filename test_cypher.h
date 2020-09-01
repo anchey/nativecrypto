@@ -16,6 +16,10 @@
 #ifndef TEST_CYPHER_H_
 #define TEST_CYPHER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <stddef.h>
 
 struct test_cypher_vector
@@ -42,5 +46,9 @@ struct test_cypher_vector_group
 int test_cypher(int cypher, struct test_cypher_vector const v);
 int test_cypher_group(struct test_cypher_vector_group const * const vg,
                       size_t vg_len);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* TEST_CYPHER_H_ */

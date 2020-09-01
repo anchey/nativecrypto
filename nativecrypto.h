@@ -15,7 +15,6 @@
 
 #ifndef NATIVECRYPTO_H_
 #define NATIVECRYPTO_H_
-#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +37,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
+#include <stdint.h>
 
 #ifndef NATIVECRYPTO_OK
 #define NATIVECRYPTO_OK 0
@@ -75,16 +75,7 @@ extern "C" {
 #define NATIVECRYPTO_ERR_INVALID_KEY -13
 #endif
 
-int NATIVECRYPTO_NAME(encrypt)(char * output_p, size_t * output_len,
-                               int cypher,
-                               char const * key_p, size_t key_len,
-                               char const * iv_p, size_t iv_len,
-                               char const * plaintext_p, size_t plaintext_len);
-int NATIVECRYPTO_NAME(decrypt)(char * output_p, size_t * output_len,
-                               int cypher,
-                               char const * key_p, size_t key_len,
-                               char const * iv_p, size_t iv_len,
-                               char const * cyphertext_p, size_t cyphertext_len);
+#include "cypher.h"
 
 #ifdef __cplusplus
 }

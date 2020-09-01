@@ -17,7 +17,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "cypher.h"
 #include "nativecrypto.h"
 #include "test_cypher.h"
 
@@ -34,8 +33,9 @@ static int test_cypher_encrypt(int cypher, struct test_cypher_vector const v)
 	size_t cyphertext_len;
 	int res;
 
-	if ((res = encrypt(NULL, &cyphertext_len, cypher, v.key, v.key_len, v.iv,
-	                   v.iv_len, v.plaintext, v.plaintext_len)) != NATIVECRYPTO_OK)
+	if ((res = NATIVECRYPTO_NAME(encrypt)(NULL, &cyphertext_len, cypher, v.key,
+	                                      v.key_len, v.iv,
+	                                      v.iv_len, v.plaintext, v.plaintext_len)) != NATIVECRYPTO_OK)
 	{
 		fprintf(stderr,
 		        "ERROR: Unable to determine cyphertext length (return value %d != %d)\n", res,
@@ -55,7 +55,7 @@ static int test_cypher_encrypt(int cypher, struct test_cypher_vector const v)
 		char * cyphertext_p = NULL;
 		int ret = 0;
 
-		cyphertext_p = malloc(v.cyphertext_len);
+		cyphertext_p = (char *) malloc(v.cyphertext_len);
 
 		do
 		{
@@ -67,8 +67,9 @@ static int test_cypher_encrypt(int cypher, struct test_cypher_vector const v)
 				break;
 			}
 
-			if ((res = encrypt(cyphertext_p, &cyphertext_len, cypher, v.key, v.key_len,
-			                   v.iv, v.iv_len, v.plaintext, v.plaintext_len)) !=
+			if ((res = NATIVECRYPTO_NAME(encrypt)(cyphertext_p, &cyphertext_len, cypher,
+			                                      v.key, v.key_len,
+			                                      v.iv, v.iv_len, v.plaintext, v.plaintext_len)) !=
 			        NATIVECRYPTO_OK)
 			{
 				fprintf(stderr, "ERROR: Unable to perform encryption (return value %d != %d)\n",
@@ -126,8 +127,9 @@ static int test_cypher_decrypt(int cypher, struct test_cypher_vector const v)
 	size_t plaintext_len;
 	int res;
 
-	if ((res = decrypt(NULL, &plaintext_len, cypher, v.key, v.key_len, v.iv,
-	                   v.iv_len, v.cyphertext, v.cyphertext_len)) != NATIVECRYPTO_OK)
+	if ((res = NATIVECRYPTO_NAME(decrypt)(NULL, &plaintext_len, cypher, v.key,
+	                                      v.key_len, v.iv,
+	                                      v.iv_len, v.cyphertext, v.cyphertext_len)) != NATIVECRYPTO_OK)
 	{
 		fprintf(stderr,
 		        "ERROR: Unable to determine plaintext length (return value %d != %d)\n", res,
@@ -147,7 +149,7 @@ static int test_cypher_decrypt(int cypher, struct test_cypher_vector const v)
 		char * plaintext_p = NULL;
 		int ret = 0;
 
-		plaintext_p = malloc(v.plaintext_len);
+		plaintext_p = (char *) malloc(v.plaintext_len);
 
 		do
 		{
@@ -159,8 +161,9 @@ static int test_cypher_decrypt(int cypher, struct test_cypher_vector const v)
 				break;
 			}
 
-			if ((res = decrypt(plaintext_p, &plaintext_len, cypher, v.key, v.key_len, v.iv,
-			                   v.iv_len, v.cyphertext, v.cyphertext_len)) !=
+			if ((res = NATIVECRYPTO_NAME(decrypt)(plaintext_p, &plaintext_len, cypher,
+			                                      v.key, v.key_len, v.iv,
+			                                      v.iv_len, v.cyphertext, v.cyphertext_len)) !=
 			        NATIVECRYPTO_OK)
 			{
 				fprintf(stderr, "ERROR: Unable to perform decryption (return value %d != %d)\n",

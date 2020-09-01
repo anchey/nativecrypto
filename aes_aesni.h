@@ -15,6 +15,10 @@
 
 #ifndef AES_AESNI_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #ifndef __AES__
 #error "AES support is required"
 #endif
@@ -184,7 +188,7 @@
 		return state; \
 	} \
 	\
-	AES_INTERNAL(VARIANT, OP, keygen)(key_schedule, pKey); \
+	AES_INTERNAL(VARIANT, OP, keygen)(key_schedule, (__m128i const *) pKey); \
 	\
 	AES_INTERNAL(ALL, OP, ECB)(VARIANT, state, pOutput, pInput, input_len, key_schedule, pIV); \
 	\
@@ -375,7 +379,7 @@
 		return state; \
 	} \
 	\
-	AES_INTERNAL(VARIANT, OP, keygen)(key_schedule, pKey); \
+	AES_INTERNAL(VARIANT, OP, keygen)(key_schedule, (__m128i const *) pKey); \
 	\
 	AES_INTERNAL(ALL, OP, CBC_PKCS7)(VARIANT, state, pOutput, pInput, input_len, key_schedule, pIV); \
 	\
@@ -488,7 +492,7 @@
 		return state; \
 	} \
 	\
-	AES_INTERNAL(VARIANT, ENC, keygen)(key_schedule, pKey); \
+	AES_INTERNAL(VARIANT, ENC, keygen)(key_schedule, (__m128i const *) pKey); \
 	\
 	AES_INTERNAL(ALL, OP, CTR)(VARIANT, _, state, pOutput, pInput, input_len, key_schedule, pIV); \
 	\
@@ -848,5 +852,9 @@ AES_CBC_PKCS7_FN_BODY(256, DEC)
 
 AES_CTR_FN_BODY(256, ALL)
 /* END AES-256 */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* AES_AESNI_H_ */

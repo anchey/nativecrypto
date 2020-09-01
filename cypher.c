@@ -16,37 +16,39 @@
 #include "aes.h"
 #include "cypher.h"
 
-int encrypt(char * output_p, size_t * output_len,
-            int cypher,
-            char const * key_p, size_t key_len,
-            char const * iv_p, size_t iv_len,
-            char const * input_p, size_t input_len)
+int NATIVECRYPTO_NAME(encrypt)(char * output_p, size_t * output_len,
+                               int cypher,
+                               char const * key_p, size_t key_len,
+                               char const * iv_p, size_t iv_len,
+                               char const * input_p, size_t input_len)
 {
 	switch (cypher)
 	{
 	case NATIVECRYPTO_CYPHER_AES_ECB:
 	case NATIVECRYPTO_CYPHER_AES_CBC_PKCS7:
 	case NATIVECRYPTO_CYPHER_AES_CTR:
-		return AES_encrypt(output_p, output_len, cypher, key_p, key_len, iv_p, iv_len,
-		                   input_p, input_len);
+		return NATIVECRYPTO_NAME(AES_encrypt)(output_p, output_len, cypher, key_p,
+		                                      key_len, iv_p, iv_len,
+		                                      input_p, input_len);
 	default:
 		return NATIVECRYPTO_ERR_INVALID_CYPHER;
 	}
 }
 
-int decrypt(char * output_p, size_t * output_len,
-            int cypher,
-            char const * key_p, size_t key_len,
-            char const * iv_p, size_t iv_len,
-            char const * input_p, size_t input_len)
+int NATIVECRYPTO_NAME(decrypt)(char * output_p, size_t * output_len,
+                               int cypher,
+                               char const * key_p, size_t key_len,
+                               char const * iv_p, size_t iv_len,
+                               char const * input_p, size_t input_len)
 {
 	switch (cypher)
 	{
 	case NATIVECRYPTO_CYPHER_AES_ECB:
 	case NATIVECRYPTO_CYPHER_AES_CBC_PKCS7:
 	case NATIVECRYPTO_CYPHER_AES_CTR:
-		return AES_decrypt(output_p, output_len, cypher, key_p, key_len, iv_p, iv_len,
-		                   input_p, input_len);
+		return NATIVECRYPTO_NAME(AES_decrypt)(output_p, output_len, cypher, key_p,
+		                                      key_len, iv_p, iv_len,
+		                                      input_p, input_len);
 	default:
 		return NATIVECRYPTO_ERR_INVALID_CYPHER;
 	}

@@ -16,18 +16,25 @@
 #ifndef CYPHER_H_
 #define CYPHER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <stddef.h>
 
-int encrypt(char * output_p, size_t * output_len,
-            int cypher,
-            char const * key_p, size_t key_len,
-            char const * iv_p, size_t iv_len,
-            char const * input_p, size_t input_len);
+int NATIVECRYPTO_NAME(encrypt)(char * output_p, size_t * output_len,
+                               int cypher,
+                               char const * key_p, size_t key_len,
+                               char const * iv_p, size_t iv_len,
+                               char const * plaintext_p, size_t plaintext_len);
+int NATIVECRYPTO_NAME(decrypt)(char * output_p, size_t * output_len,
+                               int cypher,
+                               char const * key_p, size_t key_len,
+                               char const * iv_p, size_t iv_len,
+                               char const * cyphertext_p, size_t cyphertext_len);
 
-int decrypt(char * output_p, size_t * output_len,
-            int cypher,
-            char const * key_p, size_t key_len,
-            char const * iv_p, size_t iv_len,
-            char const * input_p, size_t input_len);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* CYPHER_H_ */
