@@ -32,7 +32,7 @@
 }
 
 
-struct test_cypher_vector const aes_ecb_test_vectors[] =
+static struct test_cypher_vector const aes_ecb_test_vectors[] =
 {
 	/* AES-128 */
 	AES_TEST_VECTOR(
@@ -60,7 +60,7 @@ struct test_cypher_vector const aes_ecb_test_vectors[] =
 	),
 };
 
-struct test_cypher_vector const aes_ctr_test_vectors[] =
+static struct test_cypher_vector const aes_ctr_test_vectors[] =
 {
 	/* AES-128 */
 	AES_TEST_VECTOR(
@@ -172,7 +172,7 @@ struct test_cypher_vector const aes_ctr_test_vectors[] =
 	),
 };
 
-struct test_cypher_vector const aes_cbc_pkcs7_test_vectors[] =
+static struct test_cypher_vector const aes_cbc_pkcs7_test_vectors[] =
 {
 	/* AES-128 */
 	AES_TEST_VECTOR(
@@ -242,7 +242,7 @@ struct test_cypher_vector const aes_cbc_pkcs7_test_vectors[] =
 	),
 };
 
-struct test_cypher_vector_group const aes_vg[] =
+static struct test_cypher_vector_group const aes_vg[] =
 {
 	{
 		"AES ECB",

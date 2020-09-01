@@ -21,6 +21,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #include <stddef.h>
+#include "nativecrypto.h"
 
 int NATIVECRYPTO_NAME(encrypt)(char * output_p, size_t * output_len,
                                int cypher,

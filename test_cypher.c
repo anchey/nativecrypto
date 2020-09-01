@@ -87,7 +87,7 @@ static int test_cypher_encrypt(int cypher, struct test_cypher_vector const v)
 				break;
 			}
 
-			if (memcmp(v.cyphertext, cyphertext_p, v.cyphertext_len))
+			if (memcmp(v.cyphertext, cyphertext_p, v.cyphertext_len) != 0)
 			{
 				size_t i;
 
@@ -241,12 +241,15 @@ int test_cypher_group(struct test_cypher_vector_group const * const vg,
 	}
 
 	{
-		char buf[64];
-#if defined(__STDC__) && defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-		pres = snprintf(buf, sizeof(buf), "%" PRIsz, SZ_C(total));
-#else
-		pres = sprintf(buf, "%" PRIsz, SZ_C(total));
-#endif
+		size_t temp = total;
+		pres = 0;
+
+		do
+		{
+			++pres;
+			temp /= 10;
+		}
+		while(temp != 0);
 	}
 
 	for(i = 0; i < vg_len; i++)
@@ -270,5 +273,5 @@ int test_cypher_group(struct test_cypher_vector_group const * const vg,
 		printf("\n");
 	}
 
-	return (f == 0);
+	return f;
 }
