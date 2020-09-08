@@ -330,25 +330,32 @@ extern "C" {
 		\
 		AESDEC_CBC_PKCS7_tempctx[1] = _mm_loadu_si128(((__m128i const *) &AESDEC_CBC_PKCS7_input[0 * AES_BLOCK_SIZE(VARIANT)])); \
 		AES_INTERNAL(ALL, DEC, DO)(VARIANT, KEY_SCHEDULE, AESDEC_CBC_PKCS7_tempctx[1], AESDEC_CBC_PKCS7_tempout[0]); \
-		_mm_storeu_si128((__m128i *) &AESDEC_CBC_PKCS7_last_block[0 * AES_BLOCK_SIZE(VARIANT)], _mm_xor_si128(AESDEC_CBC_PKCS7_tempout[0], AESDEC_CBC_PKCS7_tempctx[0])); \
+		AESDEC_CBC_PKCS7_tempout[1] = _mm_xor_si128(AESDEC_CBC_PKCS7_tempout[0], AESDEC_CBC_PKCS7_tempctx[0]); \
+		_mm_storeu_si128((__m128i *) &AESDEC_CBC_PKCS7_last_block[0 * AES_BLOCK_SIZE(VARIANT)], AESDEC_CBC_PKCS7_tempout[1]); \
 		\
-		/* Verify padding */ \
+		/* Verify padding in constant time */ \
 		{ \
-			unsigned char AESDEC_CBC_PKCS7_i; \
-			register unsigned char const AESDEC_CBC_PKCS7_ipadding = (unsigned char) AESDEC_CBC_PKCS7_last_block[AES_BLOCK_SIZE(VARIANT) - 1]; \
-			register unsigned char AESDEC_CBC_PKCS7_iinvalid_padding = 0; \
+			__m128i AESDEC_CBC_PKCS7_order, AESDEC_CBC_PKCS7_padding_val, AESDEC_CBC_PKCS7_padding_mask; \
+			__m128i AESDEC_CBC_PKCS7_padding_and[2], AESDEC_CBC_PKCS7_padding_result; \
+			register int AESDEC_CBC_PKCS7_valid_padding_value; \
 			\
-			_mm_mfence(); \
-			for (AESDEC_CBC_PKCS7_i = AES_BLOCK_SIZE(VARIANT) - 2; AESDEC_CBC_PKCS7_i < AES_BLOCK_SIZE(VARIANT) - 1 && AESDEC_CBC_PKCS7_i >= AES_BLOCK_SIZE(VARIANT) - AESDEC_CBC_PKCS7_ipadding; AESDEC_CBC_PKCS7_i--) { \
-				AESDEC_CBC_PKCS7_iinvalid_padding |= AESDEC_CBC_PKCS7_ipadding ^ (unsigned char) AESDEC_CBC_PKCS7_last_block[AESDEC_CBC_PKCS7_i]; \
-			} \
-			_mm_mfence(); \
+			AESDEC_CBC_PKCS7_order = _mm_setr_epi32(0x0C0D0E0FUL, 0x08090A0BUL, 0x04050607UL, 0x00010203UL); \
+			AESDEC_CBC_PKCS7_padding_val = _mm_shuffle_epi8(AESDEC_CBC_PKCS7_tempout[1], _mm_set1_epi8(0x0F)); \
+			AESDEC_CBC_PKCS7_padding_mask = _mm_cmplt_epi8(AESDEC_CBC_PKCS7_order, AESDEC_CBC_PKCS7_padding_val); \
+			AESDEC_CBC_PKCS7_padding_and[0] = _mm_and_si128(AESDEC_CBC_PKCS7_padding_mask, AESDEC_CBC_PKCS7_tempout[1]); \
+			AESDEC_CBC_PKCS7_padding_and[1] = _mm_and_si128(AESDEC_CBC_PKCS7_padding_mask, AESDEC_CBC_PKCS7_padding_val); \
+			AESDEC_CBC_PKCS7_padding_result = _mm_cmpeq_epi32(AESDEC_CBC_PKCS7_padding_and[0], AESDEC_CBC_PKCS7_padding_and[1]); \
+			AESDEC_CBC_PKCS7_valid_padding_value = _mm_movemask_epi8(AESDEC_CBC_PKCS7_padding_result); \
 			\
-			AESDEC_CBC_PKCS7_padding = AESDEC_CBC_PKCS7_ipadding; \
-			AESDEC_CBC_PKCS7_invalid_padding = AESDEC_CBC_PKCS7_iinvalid_padding; \
+			AESDEC_CBC_PKCS7_padding = (unsigned char) AESDEC_CBC_PKCS7_last_block[AES_BLOCK_SIZE(VARIANT) - 1]; \
+			\
+			AESDEC_CBC_PKCS7_invalid_padding = (unsigned char) ((unsigned char) (AESDEC_CBC_PKCS7_padding - 1U) & (unsigned char) ((0xFFU << LOG2(AES_BLOCK_SIZE(VARIANT))) & 0xFFU)); \
+			AESDEC_CBC_PKCS7_invalid_padding |= (unsigned char) (((AESDEC_CBC_PKCS7_valid_padding_value >> 010) & 0xFF) ^ 0xFF); \
+			AESDEC_CBC_PKCS7_invalid_padding |= (unsigned char) (((AESDEC_CBC_PKCS7_valid_padding_value >> 000) & 0xFF) ^ 0xFF); \
 		} \
 		\
-		if (AESDEC_CBC_PKCS7_invalid_padding != 0) { \
+		/* TODO: Remove/rewrite this branch to make code run in constant time */ \
+		if (0 != AESDEC_CBC_PKCS7_invalid_padding) { \
 			memset_s((OUT), (rsize_t) (AESDEC_CBC_PKCS7_output - (OUT)), 0, (rsize_t) (AESDEC_CBC_PKCS7_output - (OUT))); \
 			\
 			STATE.output_len = 0; \

@@ -70,6 +70,7 @@
 #define ALWAYS_INLINE INLINE
 #endif /* __has_attribute(__always_inline__) || GNUC_VERSION_MIN(0, 0, 0) */
 
+#define LOG2(x) ((x <= 1) ? 0 : (x <= 2) ? 1 : (x <= 4) ? 2 : (x <= 8) ? 3 : (x <= 16) ? 4 : (x <= 32) ? 5 : (x <= 64) ? 6 : (x <= 128) ? 7 : 255)
 
 /* INTERNAL */
 #define BASICTOKENIZE(A) #A
